@@ -1,7 +1,10 @@
 import graphics as gp
 import time
+from colorama import init, Fore, Style
+
 import sort
 
+init(convert=True)
 
 BAR_WIDTH = 12
 BAR_HEIGHT = 12
@@ -9,7 +12,7 @@ BAR_COLOR = gp.color_rgb(242, 164, 54)
 BG_COLOR = gp.color_rgb(43, 137, 164)
 WINDOW_X = BAR_WIDTH * sort.DATA_NUM
 WINDOW_Y = BAR_HEIGHT * (sort.DATA_MAX + 5)
-STEP = 0.05
+STEP = 0.025
 
 
 # Initialize bar object from dataset entry
@@ -32,6 +35,7 @@ def draw_bars(ds, win, bars, cbars=None):
                 bar.draw(win)
         else:
             bar.draw(win)
+    win.update()
 
 
 def get_changed_bars(current_index, prev_index, playback_list):
@@ -58,6 +62,12 @@ def update_bars(ds, win, bars, cbars):
     assert len(bars) == sort.DATA_NUM
 
 
+def clear_screen(win):
+    for i in win.items[:]:
+        i.undraw()
+    win.update()
+
+
 def play_animation(ds, win, bars):
     for index, i in enumerate(sort.playback_list):
         if index > 0:
@@ -67,6 +77,7 @@ def play_animation(ds, win, bars):
         update_bars(i, win, bars, cbars)
         time.sleep(STEP)
 
+
 def print_logo():
     print('                    __             ')
     print('   _________  _____/ /_____  __  __')
@@ -75,39 +86,69 @@ def print_logo():
     print('/____/\____/_/   \__/ .___/\__, /  ')
     print('                   /_/    /____/   \n')
 
+
+def print_header(header):
+    print('\n' + Style.BRIGHT + Fore.CYAN + header + ' :' + Style.RESET_ALL)
+
+
+def print_command(command, description):
+    print(Style.BRIGHT + command + Style.RESET_ALL + ' - ' + description)
+
+
 def main():
-    # Initialization
     win = gp.GraphWin('sortpy', WINDOW_X, WINDOW_Y, autoflush=False)
     win.setBackground(color=gp.color_rgb(43, 137, 164))
-    ds = sort.generate_dataset(sort.DATA_NUM)
-    bars = []
-    draw_bars(ds, win, bars)
 
-    # Input loop
     print_logo()
-    valid_command = False
-    command = input('Type help to view commands\n')
-    while not valid_command:
-        if command == 'help':
-            print('Sorting algorithms :')
-            print('insertion - Insertion sort\n')
-            print('quit - Exit the program')
-            command = input('\n')
-        elif command == 'insertion':
-            valid_command = True
-        elif command == 'quit':
-            return
+    first_input = True
+    while True:
+        clear_screen(win)
+        ds = sort.generate_dataset(sort.DATA_NUM, repeat=False)
+        bars = []
+        draw_bars(ds, win, bars)
+        sort.playback_list = []
+
+        valid_command = False
+        if first_input:
+            command = input('Type help to view commands\n')
+            first_input = False
         else:
-            print('Command not found - type help to view commands')
-            command = input('\n')
+            command = input('')
+        while not valid_command:
+            if command == 'help':
+                print_header('Sorting algorithms')
+                print_command('insertion', 'Insertion sort')
+                print_command('bubble', 'Bubble sort')
+                print_command('selection', 'Selection sort')
 
-    sort.playback_list.append(ds[:])
-    if command == 'insertion':
-        ds = sort.insertion_sort(ds)
+                print_header('Options')
+                print_command('quit', 'Exit sortpy')
+
+                print('\n')
+                print('Click on the window after sorting finishes to select a new algorithm')
+                command = input('\n')
+            elif command == 'insertion':
+                valid_command = True
+            elif command == 'bubble':
+                valid_command = True
+            elif command == 'selection':
+                valid_command = True
+            elif command == 'quit':
+                win.close()
+                return
+            else:
+                print('Command not found - type help to view commands')
+                command = input('\n')
+
+        sort.playback_list.append(ds[:])
+        if command == 'insertion':
+            ds = sort.insertion_sort(ds)
+        elif command == 'bubble':
+            ds = sort.bubble_sort(ds)
+        elif command == 'selection':
+            ds = sort.selection_sort(ds)
         play_animation(ds, win, bars)
-    win.getMouse()
-
-    win.close()
+        win.getMouse()
 
 
 main()
