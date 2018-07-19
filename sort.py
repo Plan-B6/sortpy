@@ -1,7 +1,7 @@
 import random
 
 
-DATA_NUM = 60
+DATA_NUM = 50
 DATA_MAX = 50
 
 
