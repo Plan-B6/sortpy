@@ -99,6 +99,10 @@ def print_header(header):
     print('\n' + Style.BRIGHT + Fore.CYAN + header + ' :' + Style.RESET_ALL)
 
 
+def print_subheader(subheader):
+    print('\n' + Style.BRIGHT + Fore.LIGHTGREEN_EX + subheader + Style.RESET_ALL)
+
+
 def print_command(command, description):
     print(Style.BRIGHT + command + Style.RESET_ALL + ' - ' + description)
 
@@ -125,13 +129,21 @@ def main():
         while not valid_command:
             if command == 'help':
                 print_header('Sorting algorithms')
-                print_command('insertion', 'Insertion sort')
+                print_subheader('Bubble sorts')
                 print_command('bubble', 'Bubble sort')
                 print_command('cocktail', 'Cocktail shaker sort')
-                print_command('selection', 'Selection sort')
+                print_command('comb', 'Comb sort')
+                print_command('oddeven', 'Odd-even sort')
+                print_subheader('Insertion sorts')
+                print_command('insertion', 'Insertion sort')
+                print_command('shell', 'Shellsort')
+                print_command('gnome', 'Gnome sort')
+                print_subheader('Divide and conquer')
                 print_command('merge', 'Merge sort')
                 print_command('quick', 'Quicksort')
-                print_command('shell', 'Shellsort')
+                print_subheader('Other')
+                print_command('selection', 'Selection sort')
+                print_command('stooge', 'Stooge sort')
 
                 print_header('Options')
                 print_command('quit', 'Exit sortpy')
@@ -139,19 +151,27 @@ def main():
                 print('\n')
                 print('Click on the window after sorting finishes to select a new algorithm')
                 command = input('\n')
-            elif command == 'insertion':
-                valid_command = True
             elif command == 'bubble':
                 valid_command = True
             elif command == 'cocktail':
                 valid_command = True
-            elif command == 'selection':
+            elif command == 'comb':
+                valid_command = True
+            elif command == 'oddeven':
+                valid_command = True
+            elif command == 'insertion':
+                valid_command = True
+            elif command == 'shell':
+                valid_command = True
+            elif command == 'gnome':
                 valid_command = True
             elif command == 'merge':
                 valid_command = True
             elif command == 'quick':
                 valid_command = True
-            elif command == 'shell':
+            elif command == 'selection':
+                valid_command = True
+            elif command == 'stooge':
                 valid_command = True
             elif command == 'quit':
                 win.close()
@@ -162,19 +182,27 @@ def main():
 
         sort.playback_list.append(ds[:])
         if command == 'insertion':
-            ds = sort.insertion_sort(ds)
+            sort.insertion_sort(ds)
         elif command == 'bubble':
-            ds = sort.bubble_sort(ds)
+            sort.bubble_sort(ds)
         elif command == 'cocktail':
-            ds = sort.cocktail_sort(ds)
+            sort.cocktail_sort(ds)
         elif command == 'selection':
-            ds = sort.selection_sort(ds)
+            sort.selection_sort(ds)
         elif command == 'merge':
-            ds = sort.merge_sort(ds, 0, sort.DATA_NUM - 1)
+            sort.merge_sort(ds, 0, sort.DATA_NUM - 1)
         elif command == 'quick':
-            ds = sort.quick_sort(ds, 0, sort.DATA_NUM - 1)
+            sort.quick_sort(ds, 0, sort.DATA_NUM - 1)
         elif command == 'shell':
-            ds = sort.shell_sort(ds)
+            sort.shell_sort(ds)
+        elif command == 'gnome':
+            sort.gnome_sort(ds)
+        elif command == 'oddeven':
+            sort.odd_even_sort(ds)
+        elif command == 'comb':
+            sort.comb_sort(ds)
+        elif command == 'stooge':
+            sort.stooge_sort(ds, 0, sort.DATA_NUM - 1)
         sort.playback_list = remove_duplicates(sort.playback_list)
         play_animation(ds, win, bars)
         win.getMouse()
