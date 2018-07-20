@@ -12,7 +12,7 @@ BAR_COLOR = gp.color_rgb(242, 164, 54)
 BG_COLOR = gp.color_rgb(43, 137, 164)
 WINDOW_X = BAR_WIDTH * sort.DATA_NUM
 WINDOW_Y = BAR_HEIGHT * (sort.DATA_MAX + 5)
-STEP = 0.025
+STEP = 0.04
 
 
 # Initialize bar object from dataset entry
@@ -68,6 +68,14 @@ def clear_screen(win):
     win.update()
 
 
+def remove_duplicates(playback_list):
+    new_list = []
+    for ds in playback_list:
+        if ds not in new_list:
+            new_list.append(ds)
+    return new_list
+
+
 def play_animation(ds, win, bars):
     for index, i in enumerate(sort.playback_list):
         if index > 0:
@@ -101,7 +109,7 @@ def main():
 
     print_logo()
     first_input = True
-    while True:
+    while 1:
         clear_screen(win)
         ds = sort.generate_dataset(sort.DATA_NUM, repeat=False)
         bars = []
@@ -119,7 +127,11 @@ def main():
                 print_header('Sorting algorithms')
                 print_command('insertion', 'Insertion sort')
                 print_command('bubble', 'Bubble sort')
+                print_command('cocktail', 'Cocktail shaker sort')
                 print_command('selection', 'Selection sort')
+                print_command('merge', 'Merge sort')
+                print_command('quick', 'Quicksort')
+                print_command('shell', 'Shellsort')
 
                 print_header('Options')
                 print_command('quit', 'Exit sortpy')
@@ -131,7 +143,15 @@ def main():
                 valid_command = True
             elif command == 'bubble':
                 valid_command = True
+            elif command == 'cocktail':
+                valid_command = True
             elif command == 'selection':
+                valid_command = True
+            elif command == 'merge':
+                valid_command = True
+            elif command == 'quick':
+                valid_command = True
+            elif command == 'shell':
                 valid_command = True
             elif command == 'quit':
                 win.close()
@@ -145,8 +165,17 @@ def main():
             ds = sort.insertion_sort(ds)
         elif command == 'bubble':
             ds = sort.bubble_sort(ds)
+        elif command == 'cocktail':
+            ds = sort.cocktail_sort(ds)
         elif command == 'selection':
             ds = sort.selection_sort(ds)
+        elif command == 'merge':
+            ds = sort.merge_sort(ds, 0, sort.DATA_NUM - 1)
+        elif command == 'quick':
+            ds = sort.quick_sort(ds, 0, sort.DATA_NUM - 1)
+        elif command == 'shell':
+            ds = sort.shell_sort(ds)
+        sort.playback_list = remove_duplicates(sort.playback_list)
         play_animation(ds, win, bars)
         win.getMouse()
 
